@@ -9,11 +9,15 @@
   [![Frontend](https://img.shields.io/badge/Frontend-gOOvER%2Fhashsolo--ui-blue?logo=github)](https://github.com/gOOvER/hashsolo-ui)
   [![License](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](https://github.com/gOOvER/hashsolo/blob/master/LICENSE.txt)
   [![Support](https://img.shields.io/badge/Support-donate.goover.dev-ff69b4?logo=ko-fi&logoColor=white)](https://donate.goover.dev)
+  [![Live Pool](https://img.shields.io/badge/Live%20Pool-hashsolo.goover.dev-f7931a?logo=bitcoin&logoColor=white)](https://hashsolo.goover.dev)
+  [![Wiki](https://img.shields.io/badge/Docs-GitHub%20Wiki-2563eb?logo=gitbook&logoColor=white)](https://github.com/gOOvER/hashsolo/wiki)
 
 </div>
 
 > [!NOTE]
-> **Fork Notice:** This Compose stack deploys the maintained and hardened forks **[gOOvER/hashsolo](https://github.com/gOOvER/hashsolo)** and **[gOOvER/hashsolo-ui](https://github.com/gOOvER/hashsolo-ui)** (based on [`benjamin-wilson/public-pool`](https://github.com/benjamin-wilson/public-pool) and [`benjamin-wilson/public-pool-ui`](https://github.com/benjamin-wilson/public-pool-ui)).
+> **Full Documentation & Guides:** See the **[HashSolo GitHub Wiki](https://github.com/gOOvER/hashsolo/wiki)** for step-by-step guides on [[Dokploy Deployment|https://github.com/gOOvER/hashsolo/wiki/Dokploy-Deployment]], [[Environment Variables|https://github.com/gOOvER/hashsolo/wiki/Environment-Variables]], [[Miner Setup|https://github.com/gOOvER/hashsolo/wiki/Miner-Setup]], [[Discord Bot Setup|https://github.com/gOOvER/hashsolo/wiki/Discord-Bot-Setup]], and [[API & Monitoring|https://github.com/gOOvER/hashsolo/wiki/API-and-Monitoring]].
+>
+> **Fork Notice:** This Compose stack deploys the maintained and hardened forks **[gOOvER/hashsolo](https://github.com/gOOvER/hashsolo)** and **[gOOvER/hashsolo-ui](https://github.com/gOOvER/hashsolo-ui)** (based on [`benjamin-wilson/public-pool`](https://github.com/benjamin-wilson/public-pool) and [`benjamin-wilson/public-pool-ui`](https://github.com/benjamin-wilson/public-pool-ui)). Pull Requests and issues are always welcome!
 
 ---
 
@@ -27,9 +31,9 @@ flowchart LR
   Backend -->|"RPC :8332 & ZMQ :3000"| Node["bitcoind (pruned 550 MB)"]
 ```
 
-- **`bitcoind` (`bitcoin/bitcoin:latest`):** Pruned Bitcoin Core node (`BITCOIN_PRUNE=550` ≈ ~10 GB disk) with RPC & ZMQ (`-printtoconsole=0 -debug=0 -nodebuglogfile`).
-- **`hashsolo` (`ghcr.io/goover/hashsolo:latest`):** Stratum V1 server (`3333`) + REST/Prometheus API (`3334`), Telegram bot (`/stats`, `/workers`), and `ntfy` alerts.
-- **`hashsolo-ui` (`ghcr.io/goover/hashsolo-ui:latest`):** Angular 22 dashboard with Caddy reverse proxy, Brotli/Gzip compression, live **Bitcoin Node** status card, DE/EN toggle, and Quick Setup tabs.
+- **`bitcoind` (`bitcoin/bitcoin:latest`):** Pruned Bitcoin Core node (`BITCOIN_PRUNE=550` ≈ ~10 GB disk) with RPC & ZMQ `hashblock` (`-zmqpubhashblock=tcp://0.0.0.0:3000 -printtoconsole=0 -debug=0 -nodebuglogfile`).
+- **`hashsolo` (`ghcr.io/goover/hashsolo:latest`):** Stratum V1 server (`3333`) + REST/Prometheus API (`3334`), **Discord Components V2 Bot** (with local PNG charts & slash commands), Telegram bot (`/stats`, `/workers`), and `ntfy` alerts.
+- **`hashsolo-ui` (`ghcr.io/goover/hashsolo-ui:latest`):** Angular 22 + PrimeNG 22 dashboard with Caddy reverse proxy, Brotli/Gzip compression, live **Bitcoin Node** & **Solo Mining** status cards, **All Miners** modal, **Device Setup** modal, DE/EN flag toggle, and configurable `DONATION_*` footer ENVs.
 - All services use `pull_policy: always` so every **Redeploy** in Dokploy pulls the latest images automatically.
 
 ---
