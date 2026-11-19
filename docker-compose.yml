@@ -13,6 +13,8 @@ services:
     command:
       - -server=1
       - -printtoconsole
+      - -debug=0
+      - -nodebuglogfile
       - -rpcuser=${BITCOIN_RPC_USER:-hashsolo}
       - -rpcpassword=${BITCOIN_RPC_PASSWORD:-changeme}
       - -rpcallowip=10.0.0.0/8
