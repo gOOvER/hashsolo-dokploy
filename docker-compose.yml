@@ -69,6 +69,11 @@ services:
       DISCORD_BOT_CLIENTID: ${DISCORD_BOT_CLIENTID:-}
       DISCORD_BOT_GUILD_ID: ${DISCORD_BOT_GUILD_ID:-}
       DISCORD_BOT_CHANNEL_ID: ${DISCORD_BOT_CHANNEL_ID:-}
+      NTFY_URL: ${NTFY_URL:-}
+      NTFY_TOPIC: ${NTFY_TOPIC:-}
+      NTFY_TOKEN: ${NTFY_TOKEN:-}
+      BEST_DIFF_ALERT_MIN: ${BEST_DIFF_ALERT_MIN:-1000000000}
+      DEVICE_NOTIFICATIONS_ENABLED: ${DEVICE_NOTIFICATIONS_ENABLED:-true}
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:'+(process.env.API_PORT||3334)+'/api/info').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 30s
