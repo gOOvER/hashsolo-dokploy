@@ -1,4 +1,5 @@
 <div align="center">
+  <img src=".github/assets/social-banner.jpg" alt="HashSolo Dokploy Banner" width="100%" />
 
   # 🚀 HashSolo Dokploy Compose
 
