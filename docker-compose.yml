@@ -44,6 +44,7 @@ services:
     expose:
       - "80"
     environment:
+      API_UPSTREAM: ${API_UPSTREAM:-hashsolo:3334}
       PUBLIC_POOL_API_URL: ${PUBLIC_POOL_API_URL:-}
       PUBLIC_POOL_STRATUM_URL: ${PUBLIC_POOL_STRATUM_URL:-}
       LOGLEVEL: ${UI_LOGLEVEL:-INFO}
