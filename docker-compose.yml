@@ -1,0 +1,59 @@
+services:
+  hashsolo:
+    image: ghcr.io/goover/hashsolo:latest
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "${STRATUM_PORT:-3333}:3333/tcp"
+    expose:
+      - "${API_PORT:-3334}"
+    volumes:
+      - hashsolo-db:/hashsolo/DB
+    environment:
+      NODE_ENV: production
+      BITCOIN_RPC_URL: ${BITCOIN_RPC_URL:-http://host.docker.internal}
+      BITCOIN_RPC_USER: ${BITCOIN_RPC_USER:-}
+      BITCOIN_RPC_PASSWORD: ${BITCOIN_RPC_PASSWORD:-}
+      BITCOIN_RPC_PORT: ${BITCOIN_RPC_PORT:-8332}
+      BITCOIN_RPC_TIMEOUT: ${BITCOIN_RPC_TIMEOUT:-10000}
+      BITCOIN_RPC_COOKIEFILE: ${BITCOIN_RPC_COOKIEFILE:-}
+      BITCOIN_ZMQ_HOST: ${BITCOIN_ZMQ_HOST:-}
+      API_PORT: ${API_PORT:-3334}
+      API_SECURE: ${API_SECURE:-false}
+      STRATUM_PORT: ${STRATUM_PORT:-3333}
+      STRATUM_MAX_CONNECTIONS_PER_LISTENER: ${STRATUM_MAX_CONNECTIONS_PER_LISTENER:-10000}
+      NETWORK: ${NETWORK:-mainnet}
+      DEV_FEE_ADDRESS: ${DEV_FEE_ADDRESS:-}
+      POOL_IDENTIFIER: ${POOL_IDENTIFIER:-HashSolo}
+      SHARE_SUBMISSION_API_KEY: ${SHARE_SUBMISSION_API_KEY:-}
+      CORS_ORIGIN: ${CORS_ORIGIN:-*}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      DISCORD_BOT_TOKEN: ${DISCORD_BOT_TOKEN:-}
+      DISCORD_BOT_CLIENTID: ${DISCORD_BOT_CLIENTID:-}
+      DISCORD_BOT_GUILD_ID: ${DISCORD_BOT_GUILD_ID:-}
+      DISCORD_BOT_CHANNEL_ID: ${DISCORD_BOT_CHANNEL_ID:-}
+    networks:
+      - dokploy-network
+
+  hashsolo-ui:
+    image: ghcr.io/goover/hashsolo-ui:latest
+    restart: unless-stopped
+    depends_on:
+      - hashsolo
+    expose:
+      - "80"
+    environment:
+      PUBLIC_POOL_API_URL: ${PUBLIC_POOL_API_URL:-}
+      PUBLIC_POOL_STRATUM_URL: ${PUBLIC_POOL_STRATUM_URL:-}
+      LOGLEVEL: ${UI_LOGLEVEL:-INFO}
+      LOGFORMAT: ${UI_LOGFORMAT:-json}
+    networks:
+      - dokploy-network
+
+volumes:
+  hashsolo-db:
+
+networks:
+  dokploy-network:
+    external: true
