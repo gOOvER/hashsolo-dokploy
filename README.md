@@ -1,13 +1,20 @@
 # HashSolo Dokploy Compose
 
-Docker-Compose-Setup für **Dokploy** (Backend `hashsolo` + Frontend `hashsolo-ui`).
+Komplettes Docker-Compose-Setup für **Dokploy** inkl. **Bitcoin Core** (`bitcoind`), **Backend** (`hashsolo`) und **Frontend** (`hashsolo-ui`).
 
 ## Einrichtung in Dokploy
 
-1. **Docker-Compose-Projekt** in Dokploy anlegen und diese `docker-compose.yml` verwenden.
-2. **Environment Variables** aus `.env.example` im Dokploy-Dashboard hinterlegen (`BITCOIN_RPC_*`, `PUBLIC_POOL_API_URL`, `PUBLIC_POOL_STRATUM_URL`, `CORS_ORIGIN`, optional `SHARE_SUBMISSION_API_KEY`).
-3. **Domains / Routing in Dokploy:**
-   - **Web-UI + API (eine Domain):** Hauptdomain (z. B. `https://pool.example.com`) in Dokploy auf Service `hashsolo-ui` (Port `80`) routen. Caddy proxiet `/api/*` automatisch intern an `hashsolo:3334` (`PUBLIC_POOL_API_URL` kann leer bleiben).
-   - **Stratum TCP (`hashsolo`, Port `3333`):** Wird direkt über `${STRATUM_PORT:-3333}:3333/tcp` am Host bereitgestellt (Firewall-Port `3333/tcp` freigeben).
-   - *(Optional)* Falls du die API separat erreichbar machen willst, kannst du zusätzlich eine Subdomain auf `hashsolo` (Port `3334`) routen und in `PUBLIC_POOL_API_URL` + `CORS_ORIGIN` eintragen.
-4. **Persistenz:** Die SQLite-Datenbank liegt im benannten Docker-Volume `hashsolo-db` (`/hashsolo/DB`).
+1. **Docker-Compose-Projekt** in Dokploy anlegen und dieses Repository (`https://github.com/gOOvER/hashsolo-dokploy`) verwenden.
+2. **Environment Variables** im Tab **Environment** setzen:
+   - `BITCOIN_RPC_USER` & `BITCOIN_RPC_PASSWORD` (starkes Passwort wählen – wird automatisch für `bitcoind` und `hashsolo` genutzt)
+   - `BITCOIN_PRUNE` (`550` = ~10 GB pruned Node als Standard, `0` = Full Node mit ~700+ GB)
+   - `PUBLIC_POOL_STRATUM_URL=stratum.goover.dev:3333`
+3. **Domain in Dokploy** (Tab **Domains** → **Add Domain**):
+   - **Service:** `hashsolo-ui`, **Port:** `80`, **Host:** `hashsolo.goover.dev`, **HTTPS:** Let's Encrypt.
+   - Caddy proxiet `/api/*` automatisch intern an `hashsolo:3334`.
+4. **Ports / Firewall:**
+   - **`3333/tcp`**: Stratum für Miner (muss in der Server-Firewall offen sein).
+   - **`8333/tcp`**: Bitcoin P2P-Netzwerk (optional offen für eingehende Peers).
+5. **Persistenz:**
+   - `bitcoind-data` (`/home/bitcoin/.bitcoin`)
+   - `hashsolo-db` (`/hashsolo/DB`)
