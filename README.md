@@ -1,37 +1,68 @@
-# HashSolo Dokploy Compose
+<div align="center">
 
-Komplettes Docker-Compose-Setup für **Dokploy** inkl. **Bitcoin Core** (`bitcoind`), **Backend** (`hashsolo`) und **Frontend** (`hashsolo-ui`).
+  # 🚀 HashSolo Dokploy Compose
 
-> **Fork-Hinweis:** Dieses Setup deployt die gehärteten und modernisierten Forks **[gOOvER/hashsolo](https://github.com/gOOvER/hashsolo)** und **[gOOvER/hashsolo-ui](https://github.com/gOOvER/hashsolo-ui)** (basierend auf [`benjamin-wilson/public-pool`](https://github.com/benjamin-wilson/public-pool) und [`benjamin-wilson/public-pool-ui`](https://github.com/benjamin-wilson/public-pool-ui)).
+  **One-Click Bitcoin Solo Mining Stack for Dokploy (`bitcoind` + `hashsolo` + `hashsolo-ui`)**
 
-## Enthalten im Stack
+  [![Backend](https://img.shields.io/badge/Backend-gOOvER%2Fhashsolo-blue?logo=github)](https://github.com/gOOvER/hashsolo)
+  [![Frontend](https://img.shields.io/badge/Frontend-gOOvER%2Fhashsolo--ui-blue?logo=github)](https://github.com/gOOvER/hashsolo-ui)
+  [![License](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](https://github.com/gOOvER/hashsolo/blob/master/LICENSE.txt)
+  [![Support](https://img.shields.io/badge/Support-donate.goover.dev-ff69b4?logo=ko-fi&logoColor=white)](https://donate.goover.dev)
 
-- **`bitcoind` (`bitcoin/bitcoin:latest`):** Integrierter Bitcoin-Core-Node (standardmäßig pruned auf `550` MB ≈ ~10 GB Disk) mit RPC & ZMQ (`-printtoconsole=0 -debug=0 -nodebuglogfile`).
-- **`hashsolo` (`ghcr.io/goover/hashsolo:latest`):** Stratum-V1-Backend (Port `3333`) + API (intern `3334`, inkl. `/api/node/status` für den Live-Sync-Status).
-- **`hashsolo-ui` (`ghcr.io/goover/hashsolo-ui:latest`):** Angular-22-Dashboard mit Caddy Reverse-Proxy (`/api/*` → `hashsolo:3334`) und Brotli/Gzip-Komprimierung.
-- Alle Services nutzen `pull_policy: always`, sodass ein **Redeploy** in Dokploy automatisch die neuesten `:latest`-Images zieht.
+</div>
 
-## Einrichtung in Dokploy
+> [!NOTE]
+> **Fork Notice:** This Compose stack deploys the maintained and hardened forks **[gOOvER/hashsolo](https://github.com/gOOvER/hashsolo)** and **[gOOvER/hashsolo-ui](https://github.com/gOOvER/hashsolo-ui)** (based on [`benjamin-wilson/public-pool`](https://github.com/benjamin-wilson/public-pool) and [`benjamin-wilson/public-pool-ui`](https://github.com/benjamin-wilson/public-pool-ui)).
 
-1. **Docker-Compose-Projekt** in Dokploy anlegen und dieses Repository (`https://github.com/gOOvER/hashsolo-dokploy`) verwenden.
-2. **Environment Variables** im Tab **Environment** setzen (Vorlage: [`.env.example`](.env.example)):
-   - `BITCOIN_RPC_USER` & `BITCOIN_RPC_PASSWORD` (starkes Passwort wählen – wird automatisch für `bitcoind` und `hashsolo` genutzt)
-   - `BITCOIN_PRUNE` (`550` = ~10 GB pruned Node als Standard, `0` = Full Node mit ~700+ GB)
+---
+
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+  Miner["Miner (NMMiner / Bitaxe / ASIC)"] -->|TCP :3333| Backend["hashsolo (:3333 / :3334)"]
+  Browser["Browser (HTTPS)"] -->|":80 / Caddy"| UI["hashsolo-ui (Angular 22 + Caddy)"]
+  UI -->|"/api/* proxy"| Backend
+  Backend -->|"RPC :8332 & ZMQ :3000"| Node["bitcoind (pruned 550 MB)"]
+```
+
+- **`bitcoind` (`bitcoin/bitcoin:latest`):** Pruned Bitcoin Core node (`BITCOIN_PRUNE=550` ≈ ~10 GB disk) with RPC & ZMQ (`-printtoconsole=0 -debug=0 -nodebuglogfile`).
+- **`hashsolo` (`ghcr.io/goover/hashsolo:latest`):** Stratum V1 server (`3333`) + REST/Prometheus API (`3334`), Telegram bot (`/stats`, `/workers`), and `ntfy` alerts.
+- **`hashsolo-ui` (`ghcr.io/goover/hashsolo-ui:latest`):** Angular 22 dashboard with Caddy reverse proxy, Brotli/Gzip compression, live **Bitcoin Node** status card, DE/EN toggle, and Quick Setup tabs.
+- All services use `pull_policy: always` so every **Redeploy** in Dokploy pulls the latest images automatically.
+
+---
+
+## ⚡ Setup in Dokploy
+
+1. **Create a Compose Project** in Dokploy pointing to `https://github.com/gOOvER/hashsolo-dokploy`.
+2. **Configure Environment Variables** (see [`.env.example`](.env.example)):
+   - `BITCOIN_RPC_USER` & `BITCOIN_RPC_PASSWORD` *(strong password — shared by `bitcoind` and `hashsolo`)*
+   - `BITCOIN_PRUNE=550` *(~10 GB pruned node; set `0` for full node)*
    - `PUBLIC_POOL_STRATUM_URL=stratum.goover.dev:3333`
-   - `DEV_FEE_ADDRESS=` *(optional: setzt 1,5 % Fee für Miner ≥ 50 TH/s; unter 50 TH/s bleibt es 0 %)*
-3. **Domain in Dokploy** (Tab **Domains** → **Add Domain**):
-   - **Service:** `hashsolo-ui`, **Port:** `80`, **Host:** `hashsolo.goover.dev`, **HTTPS:** Let's Encrypt.
-   - Caddy proxiet `/api/*` automatisch intern an `hashsolo:3334`.
-4. **Ports / Firewall:**
-   - **`3333/tcp`**: Stratum für Miner (muss in der Server-Firewall offen sein).
-   - **`8333/tcp`**: Bitcoin P2P-Netzwerk (optional offen für eingehende Peers).
-5. **Persistenz (Volumes):**
-   - `bitcoind-data` (`/home/bitcoin/.bitcoin`)
-   - `hashsolo-db` (`/hashsolo/DB`)
+   - `DEV_FEE_ADDRESS=` *(optional: 1.5% fee for miners `>= 50 TH/s`; always `0%` under `50 TH/s`)*
+   - *Optional KH/s miner tuning (e.g. NMMiner):* `STRATUM_START_DIFF=0.001`, `BEST_DIFF_ALERT_MIN=1`
+3. **Add Domain** in Dokploy (**Domains → Add Domain**):
+   - **Service:** `hashsolo-ui`, **Port:** `80`, **HTTPS:** Let's Encrypt.
+4. **Open Firewall Ports:**
+   - **`3333/tcp`**: Stratum V1 for miners *(required)*.
+   - **`8333/tcp`**: Bitcoin P2P *(optional, for incoming peers)*.
+5. **Persistent Volumes:** `bitcoind-data` (`/home/bitcoin/.bitcoin`) and `hashsolo-db` (`/hashsolo/DB`).
 
-## Miner-Konfiguration (Beispiel Bitaxe / NMMiner)
+---
 
-- **Pool URL:** `stratum.goover.dev` *(oder `stratum+tcp://stratum.goover.dev:3333` bei Minern mit kombiniertem Feld)*
-- **Port:** `3333`
-- **Username / Wallet:** `<deine-btc-adresse>.<workername>` (z. B. `bc1q...xyz.nmminer1`)
-- **Passwort:** `x`
+## ⛏️ Miner Quick Config (NMMiner / Bitaxe / ASIC)
+
+| Setting | Value |
+| :--- | :--- |
+| **Pool URL** | `stratum.goover.dev` *(or `stratum+tcp://stratum.goover.dev:3333`)* |
+| **Port** | `3333` |
+| **Username / Wallet** | `<your-btc-address>.<workername>` *(e.g. `bc1q...xyz.nmminer1`)* |
+| **Password** | `x` |
+
+---
+
+## 💝 Support
+
+- **Donate / Ko-fi / Buy Me a Coffee:** [donate.goover.dev](https://donate.goover.dev)
+- **Bitcoin (BTC Mainnet):** `bc1qt6wec64n3gnrhclp4vfckyvr8h27tmqswy28gc`
