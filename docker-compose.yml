@@ -12,7 +12,7 @@ services:
       - bitcoind-data:/home/bitcoin/.bitcoin
     command:
       - -server=1
-      - -printtoconsole
+      - -printtoconsole=0
       - -debug=0
       - -nodebuglogfile
       - -rpcuser=${BITCOIN_RPC_USER:-hashsolo}
