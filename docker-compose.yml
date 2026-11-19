@@ -59,7 +59,7 @@ services:
       API_SECURE: ${API_SECURE:-false}
       STRATUM_PORT: ${STRATUM_PORT:-3333}
       STRATUM_MAX_CONNECTIONS_PER_LISTENER: ${STRATUM_MAX_CONNECTIONS_PER_LISTENER:-10000}
-      STRATUM_START_DIFF: ${STRATUM_START_DIFF:-}
+      STRATUM_START_DIFF: ${STRATUM_START_DIFF:-0.001}
       VARDIFF_TARGET_TIME: ${VARDIFF_TARGET_TIME:-10}
       VARDIFF_MIN_DIFF: ${VARDIFF_MIN_DIFF:-0.00001}
       NETWORK: ${NETWORK:-mainnet}
@@ -75,7 +75,7 @@ services:
       NTFY_URL: ${NTFY_URL:-}
       NTFY_TOPIC: ${NTFY_TOPIC:-}
       NTFY_TOKEN: ${NTFY_TOKEN:-}
-      BEST_DIFF_ALERT_MIN: ${BEST_DIFF_ALERT_MIN:-1000000000}
+      BEST_DIFF_ALERT_MIN: ${BEST_DIFF_ALERT_MIN:-1}
       DEVICE_NOTIFICATIONS_ENABLED: ${DEVICE_NOTIFICATIONS_ENABLED:-true}
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:'+(process.env.API_PORT||3334)+'/api/info').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
