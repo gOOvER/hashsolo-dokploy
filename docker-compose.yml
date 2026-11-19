@@ -33,14 +33,21 @@ services:
       DISCORD_BOT_CLIENTID: ${DISCORD_BOT_CLIENTID:-}
       DISCORD_BOT_GUILD_ID: ${DISCORD_BOT_GUILD_ID:-}
       DISCORD_BOT_CHANNEL_ID: ${DISCORD_BOT_CHANNEL_ID:-}
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:'+(process.env.API_PORT||3334)+'/api/info').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
     networks:
-      - dokploy-network
+      - default
 
   hashsolo-ui:
     image: ghcr.io/goover/hashsolo-ui:latest
     restart: unless-stopped
     depends_on:
-      - hashsolo
+      hashsolo:
+        condition: service_started
     expose:
       - "80"
     environment:
@@ -50,11 +57,13 @@ services:
       LOGLEVEL: ${UI_LOGLEVEL:-INFO}
       LOGFORMAT: ${UI_LOGFORMAT:-json}
     networks:
+      - default
       - dokploy-network
 
 volumes:
   hashsolo-db:
 
 networks:
+  default:
   dokploy-network:
     external: true
