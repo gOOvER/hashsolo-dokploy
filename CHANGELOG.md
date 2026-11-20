@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Exposed `DONATION_BTC_ADDRESS`, `DONATION_URL`, `DONATION_LINK_LABEL`, `DONATION_TITLE`, and `DONATION_SUBTITLE` runtime footer ENVs for `hashsolo-ui` in `docker-compose.yml` and `.env.example`.
 
 ### Changed
+- Updated `hashsolo-ui` `depends_on.hashsolo.condition` to `service_healthy` in `docker-compose.yml`.
 - Switched `bitcoind` ZMQ publisher in `docker-compose.yml` from `zmqpubrawblock` to lightweight 45-byte `zmqpubhashblock`.
 - Updated `README.md` with GitHub Wiki links, Discord Components V2 bot, and current UI/backend features.
 

@@ -92,7 +92,7 @@ services:
     restart: unless-stopped
     depends_on:
       hashsolo:
-        condition: service_started
+        condition: service_healthy
     expose:
       - "80"
     environment:
