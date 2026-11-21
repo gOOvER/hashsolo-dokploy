@@ -7,6 +7,7 @@
 
   [![Backend](https://img.shields.io/badge/Backend-gOOvER%2Fhashsolo-blue?logo=github)](https://github.com/gOOvER/hashsolo)
   [![Frontend](https://img.shields.io/badge/Frontend-gOOvER%2Fhashsolo--ui-blue?logo=github)](https://github.com/gOOvER/hashsolo-ui)
+  [![Docker Arch](https://img.shields.io/badge/Docker-amd64%20%7C%20arm64-2496ed?logo=docker&logoColor=white)](docker-compose.yml)
   [![License](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](https://github.com/gOOvER/hashsolo/blob/master/LICENSE.txt)
   [![Support](https://img.shields.io/badge/Support-donate.goover.dev-ff69b4?logo=ko-fi&logoColor=white)](https://donate.goover.dev)
   [![Live Pool](https://img.shields.io/badge/Live%20Pool-hashsolo.goover.dev-f7931a?logo=bitcoin&logoColor=white)](https://hashsolo.goover.dev)
