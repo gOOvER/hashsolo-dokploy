@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-21
+
 ### Added
 - Added Docker `healthcheck` definitions for `bitcoind` (`bitcoin-cli getblockchaininfo`) and `hashsolo-ui` (`wget http://127.0.0.1:80/`) in `docker-compose.yml`.
 - Exposed `DONATION_BTC_ADDRESS`, `DONATION_URL`, `DONATION_LINK_LABEL`, `DONATION_TITLE`, and `DONATION_SUBTITLE` runtime footer ENVs for `hashsolo-ui` in `docker-compose.yml` and `.env.example`.
