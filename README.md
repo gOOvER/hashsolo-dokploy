@@ -34,7 +34,7 @@ flowchart LR
 - **`bitcoind` (`bitcoin/bitcoin:latest`):** Pruned Bitcoin Core node (`BITCOIN_PRUNE=550` ≈ ~10 GB disk) with RPC & ZMQ `hashblock` (`-zmqpubhashblock=tcp://0.0.0.0:3000 -printtoconsole=0 -debug=0 -nodebuglogfile`).
 - **`hashsolo` (`ghcr.io/goover/hashsolo:latest`):** Stratum V1 server (`3333`) + REST/Prometheus API (`3334`), **Discord Components V2 Bot** (with local PNG charts & slash commands), Telegram bot (`/stats`, `/workers`), and `ntfy` alerts.
 - **`hashsolo-ui` (`ghcr.io/goover/hashsolo-ui:latest`):** Angular 22 + PrimeNG 22 dashboard with Caddy reverse proxy, Brotli/Gzip compression, live **Bitcoin Node** & **Solo Mining** status cards, **All Miners** modal, **Device Setup** modal, DE/EN flag toggle, and configurable `DONATION_*` footer ENVs.
-- All services use `pull_policy: always` so every **Redeploy** in Dokploy pulls the latest images automatically.
+- All services use `pull_policy: always` with native multi-arch (`linux/amd64` & `linux/arm64`) images so every **Redeploy** in Dokploy pulls the right architecture automatically.
 
 ---
 
