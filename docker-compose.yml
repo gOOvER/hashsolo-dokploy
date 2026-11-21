@@ -46,10 +46,10 @@ services:
       - "host.docker.internal:host-gateway"
     ports:
       - "${STRATUM_PORT:-3333}:3333/tcp"
-      - "${STRATUM_TLS_PORT:-4333}:4333/tcp"
       - "${STRATUM_V2_PORT:-23330}:23330/tcp"
     expose:
       - "${API_PORT:-3334}"
+      - "${STRATUM_TLS_PORT:-4333}"
     volumes:
       - hashsolo-db:/hashsolo/DB
     environment:
@@ -98,8 +98,20 @@ services:
       timeout: 5s
       retries: 3
       start_period: 15s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=dokploy-network"
+      - "traefik.tcp.routers.hashsolo-stratum-tls.entrypoints=stratum-tls"
+      - "traefik.tcp.routers.hashsolo-stratum-tls.rule=HostSNI(`${STRATUM_TLS_DOMAIN:-stratum.goover.dev}`)"
+      - "traefik.tcp.routers.hashsolo-stratum-tls.tls=true"
+      - "traefik.tcp.routers.hashsolo-stratum-tls.tls.certresolver=letsencrypt"
+      - "traefik.tcp.routers.hashsolo-stratum-tls.tls.passthrough=false"
+      - "traefik.tcp.routers.hashsolo-stratum-tls.tls.domains[0].main=${STRATUM_TLS_DOMAIN:-stratum.goover.dev}"
+      - "traefik.tcp.routers.hashsolo-stratum-tls.service=hashsolo-stratum-tls"
+      - "traefik.tcp.services.hashsolo-stratum-tls.loadbalancer.server.port=3333"
     networks:
       - default
+      - dokploy-network
 
   hashsolo-ui:
     image: ghcr.io/goover/hashsolo-ui:latest

@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### Added
-- Exposed optional **Stratum V1 TLS** (`STRATUM_TLS_ENABLED=false`, port `4333`) and **Stratum V2** (`STRATUM_V2_ENABLED=false`, port `23330`) ports and environment variables in `docker-compose.yml` and `.env.example`.
+- Exposed optional **Stratum V1 TLS** (`STRATUM_TLS_ENABLED=false`, port `4333`) and **Stratum V2** (`STRATUM_V2_ENABLED=false`, port `23330`) ports and environment variables in `docker-compose.yml` and `.env.example`, plus Traefik TCP TLS labels (`hashsolo-stratum-tls` via `dokploy-network` and `STRATUM_TLS_DOMAIN`) on `hashsolo` without binding host port `4333`.
 
 ## [1.1.0] - 2026-11-21
 
