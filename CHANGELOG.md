@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added
+- Exposed optional **Stratum V1 TLS** (`STRATUM_TLS_ENABLED=false`, port `4333`) and **Stratum V2** (`STRATUM_V2_ENABLED=false`, port `23330`) ports and environment variables in `docker-compose.yml` and `.env.example`.
+
 ## [1.1.0] - 2026-11-21
 
 ### Added
