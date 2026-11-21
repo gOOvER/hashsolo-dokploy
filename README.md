@@ -33,7 +33,7 @@ flowchart LR
 ```
 
 - **`bitcoind` (`bitcoin/bitcoin:latest`):** Pruned Bitcoin Core node (`BITCOIN_PRUNE=550` ≈ ~10 GB disk) with RPC & ZMQ `hashblock` (`-zmqpubhashblock=tcp://0.0.0.0:3000 -printtoconsole=0 -debug=0 -nodebuglogfile`).
-- **`hashsolo` (`ghcr.io/goover/hashsolo:latest`):** Stratum V1 server (`3333`) + REST/Prometheus API (`3334`), **Discord Components V2 Bot** (with local PNG charts & slash commands), Telegram bot (`/stats`, `/workers`), and `ntfy` alerts.
+- **`hashsolo` (`ghcr.io/goover/hashsolo:latest`):** Stratum V1 (`3333`), optional **Stratum V1 TLS (`4333` via Traefik)**, optional native **Stratum V2 (`23330`)**, REST & Prometheus `/metrics` API (`3334`, with `prometheus.io/*` labels and `hashsolo-metrics` network alias), **Discord Components V2 Bot**, Telegram bot, and `ntfy` alerts.
 - **`hashsolo-ui` (`ghcr.io/goover/hashsolo-ui:latest`):** Angular 22 + PrimeNG 22 dashboard with Caddy reverse proxy, Brotli/Gzip compression, live **Bitcoin Node** & **Solo Mining** status cards, **All Miners** modal, **Device Setup** modal, DE/EN flag toggle, and configurable `DONATION_*` footer ENVs.
 - All services use `pull_policy: always` with native multi-arch (`linux/amd64` & `linux/arm64`) images so every **Redeploy** in Dokploy pulls the right architecture automatically.
 
@@ -65,6 +65,12 @@ flowchart LR
 | **Port** | `3333` |
 | **Username / Wallet** | `<your-btc-address>.<workername>` *(e.g. `bc1q...xyz.nmminer1`)* |
 | **Password** | `x` |
+
+---
+
+## 🙏 Upstream & Fork Attribution
+
+This Dokploy stack deploys **[gOOvER/hashsolo](https://github.com/gOOvER/hashsolo)** and **[gOOvER/hashsolo-ui](https://github.com/gOOvER/hashsolo-ui)** — actively maintained, hardened open-source (**GPL-3.0**) forks of [`benjamin-wilson/public-pool`](https://github.com/benjamin-wilson/public-pool) and [`benjamin-wilson/public-pool-ui`](https://github.com/benjamin-wilson/public-pool-ui).
 
 ---
 
