@@ -16,8 +16,6 @@ services:
       - -printtoconsole=0
       - -debug=0
       - -nodebuglogfile
-      - -debug=0
-      - -nodebuglogfile
       - -rpcuser=${BITCOIN_RPC_USER:-hashsolo}
       - -rpcpassword=${BITCOIN_RPC_PASSWORD:-changeme}
       - -rpcallowip=10.0.0.0/8
@@ -27,6 +25,12 @@ services:
       - -rpcbind=0.0.0.0
       - -zmqpubhashblock=tcp://0.0.0.0:3000
       - -prune=${BITCOIN_PRUNE:-550}
+    healthcheck:
+      test: ["CMD-SHELL", "bitcoin-cli -rpcuser=${BITCOIN_RPC_USER:-hashsolo} -rpcpassword=${BITCOIN_RPC_PASSWORD:-changeme} getblockchaininfo >/dev/null 2>&1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
     networks:
       - default
 
@@ -106,6 +110,12 @@ services:
       DONATION_SUBTITLE: ${DONATION_SUBTITLE:-}
       LOGLEVEL: ${UI_LOGLEVEL:-INFO}
       LOGFORMAT: ${UI_LOGFORMAT:-json}
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:80/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     networks:
       - default
       - dokploy-network
