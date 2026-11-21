@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added
+- Added `prometheus.io/scrape`, `prometheus.io/port`, and `prometheus.io/path=/metrics` labels plus configurable `PROMETHEUS_NETWORK_ALIAS` (`hashsolo-metrics` on `dokploy-network`) to `hashsolo` in `docker-compose.yml` for plug-and-play Prometheus scraping.
+
 ## [1.2.0] - 2026-11-21
 
 ### Added

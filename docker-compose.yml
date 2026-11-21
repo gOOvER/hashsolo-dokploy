@@ -109,9 +109,14 @@ services:
       - "traefik.tcp.routers.hashsolo-stratum-tls.tls.domains[0].main=${STRATUM_TLS_DOMAIN:-stratum.goover.dev}"
       - "traefik.tcp.routers.hashsolo-stratum-tls.service=hashsolo-stratum-tls"
       - "traefik.tcp.services.hashsolo-stratum-tls.loadbalancer.server.port=3333"
+      - "prometheus.io/scrape=true"
+      - "prometheus.io/port=${API_PORT:-3334}"
+      - "prometheus.io/path=/metrics"
     networks:
-      - default
-      - dokploy-network
+      default:
+      dokploy-network:
+        aliases:
+          - ${PROMETHEUS_NETWORK_ALIAS:-hashsolo-metrics}
 
   hashsolo-ui:
     image: ghcr.io/goover/hashsolo-ui:latest
