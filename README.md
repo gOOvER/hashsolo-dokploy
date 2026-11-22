@@ -48,6 +48,7 @@ flowchart LR
    - `PUBLIC_POOL_STRATUM_URL=stratum.goover.dev:3333`
    - `DEV_FEE_ADDRESS=` *(optional: 1.5% fee for miners `>= 50 TH/s`; always `0%` under `50 TH/s`)*
    - *Optional KH/s miner tuning (e.g. NMMiner):* `STRATUM_START_DIFF=0.001`, `BEST_DIFF_ALERT_MIN=1`
+   - *Security defaults:* `ALLOW_PUBLIC_METRICS=false` (keeps `/metrics` internal via `hashsolo-metrics:3334`), `STRATUM_MAX_CONNECTIONS_PER_IP=100`, `STRATUM_MAX_INVALID_MESSAGES=20`, `API_RATE_LIMIT_MAX=120`, plus container sandboxing (`no-new-privileges`, `cap_drop: ALL`, `read_only: true` on `hashsolo`).
 3. **Add Domain** in Dokploy (**Domains → Add Domain**):
    - **Service:** `hashsolo-ui`, **Port:** `80`, **HTTPS:** Let's Encrypt.
 4. **Open Firewall Ports:**

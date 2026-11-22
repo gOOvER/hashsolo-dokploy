@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 - Added `prometheus.io/scrape`, `prometheus.io/port`, and `prometheus.io/path=/metrics` labels plus configurable `PROMETHEUS_NETWORK_ALIAS` (`hashsolo-metrics` on `dokploy-network`) to `hashsolo` in `docker-compose.yml` for plug-and-play Prometheus scraping.
+- Exposed configurable backend & UI security ENVs in `docker-compose.yml` and `.env.example` (`ALLOW_PUBLIC_METRICS=false`, `METRICS_BEARER_TOKEN`, `STRATUM_MAX_CONNECTIONS_PER_IP=100`, `STRATUM_MAX_INVALID_MESSAGES=20`, `API_RATE_LIMIT_MAX=120`, `API_RATE_LIMIT_WINDOW_MS=60000`).
+
+### Security
+- Sandboxed `hashsolo` (`security_opt: [no-new-privileges:true]`, `cap_drop: [ALL]`, `read_only: true`, `tmpfs: [/tmp]`) and `hashsolo-ui` (`security_opt: [no-new-privileges:true]`, `cap_drop: [ALL]`, `cap_add: [NET_BIND_SERVICE]`) in `docker-compose.yml`.
+- Disabled public `/api/metrics` access through `hashsolo-ui` by default (`ALLOW_PUBLIC_METRICS=false`) while keeping internal Prometheus scraping via `hashsolo-metrics:3334/metrics` active.
 
 ## [1.2.0] - 2026-11-21
 

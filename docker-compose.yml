@@ -52,6 +52,13 @@ services:
       - "${STRATUM_TLS_PORT:-4333}"
     volumes:
       - hashsolo-db:/hashsolo/DB
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp
     environment:
       NODE_ENV: production
       BITCOIN_RPC_URL: ${BITCOIN_RPC_URL:-http://bitcoind}
@@ -74,6 +81,11 @@ services:
       STRATUM_V2_AUTHORITY_PRIVKEY: ${STRATUM_V2_AUTHORITY_PRIVKEY:-}
       STRATUM_V2_AUTHORITY_KEY_PATH: ${STRATUM_V2_AUTHORITY_KEY_PATH:-./DB/sv2-authority.key}
       STRATUM_MAX_CONNECTIONS_PER_LISTENER: ${STRATUM_MAX_CONNECTIONS_PER_LISTENER:-10000}
+      STRATUM_MAX_CONNECTIONS_PER_IP: ${STRATUM_MAX_CONNECTIONS_PER_IP:-100}
+      STRATUM_MAX_INVALID_MESSAGES: ${STRATUM_MAX_INVALID_MESSAGES:-20}
+      API_RATE_LIMIT_MAX: ${API_RATE_LIMIT_MAX:-120}
+      API_RATE_LIMIT_WINDOW_MS: ${API_RATE_LIMIT_WINDOW_MS:-60000}
+      METRICS_BEARER_TOKEN: ${METRICS_BEARER_TOKEN:-}
       STRATUM_START_DIFF: ${STRATUM_START_DIFF:-0.001}
       VARDIFF_TARGET_TIME: ${VARDIFF_TARGET_TIME:-10}
       VARDIFF_MIN_DIFF: ${VARDIFF_MIN_DIFF:-0.00001}
@@ -127,8 +139,15 @@ services:
         condition: service_healthy
     expose:
       - "80"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
     environment:
       API_UPSTREAM: ${API_UPSTREAM:-hashsolo:3334}
+      ALLOW_PUBLIC_METRICS: ${ALLOW_PUBLIC_METRICS:-false}
       PUBLIC_POOL_API_URL: ${PUBLIC_POOL_API_URL:-}
       PUBLIC_POOL_STRATUM_URL: ${PUBLIC_POOL_STRATUM_URL:-}
       PUBLIC_POOL_SECURE_STRATUM_URL: ${PUBLIC_POOL_SECURE_STRATUM_URL:-}
