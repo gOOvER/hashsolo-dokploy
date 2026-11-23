@@ -11,6 +11,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Exposed configurable backend & UI security ENVs in `docker-compose.yml` and `.env.example` (`ALLOW_PUBLIC_METRICS=false`, `METRICS_BEARER_TOKEN`, `STRATUM_MAX_CONNECTIONS_PER_IP=100`, `STRATUM_MAX_INVALID_MESSAGES=20`, `API_RATE_LIMIT_MAX=120`, `API_RATE_LIMIT_WINDOW_MS=60000`).
 - Added `json-file` log rotation (`10m` x `3`), configurable memory limits (`BITCOIND_MEM_LIMIT`, `HASHSOLO_MEM_LIMIT`, `HASHSOLO_UI_MEM_LIMIT`), `bitcoind` tuning ENVs (`BITCOIN_DBCACHE=512`, `BITCOIN_MAXCONNECTIONS=40`), and an optional `backup` profile (`hashsolo-backup` daily SQLite `.backup` with 7-day retention).
 
+### Changed
+- Enabled `bitcoind` console logging (`-printtoconsole=1` with `json-file` log rotation), increased `stop_grace_period` to `120s` (prevents `SIGKILL` during `dbcache` flush and slow block verification on restart), and raised `bitcoind` healthcheck `start_period` to `60s`.
+
 ### Security
 - Sandboxed `bitcoind` (`no-new-privileges:true`, `cap_drop: [ALL]`), `hashsolo` (`security_opt: [no-new-privileges:true]`, `cap_drop: [ALL]`, `read_only: true`, `tmpfs: [/tmp]`), and `hashsolo-ui` (`security_opt: [no-new-privileges:true]`, `cap_drop: [ALL]`, `cap_add: [NET_BIND_SERVICE]`) in `docker-compose.yml`.
 - Disabled public `/api/metrics` access through `hashsolo-ui` by default (`ALLOW_PUBLIC_METRICS=false`) while keeping internal Prometheus scraping via `hashsolo-metrics:3334/metrics` active.

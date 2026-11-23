@@ -9,7 +9,7 @@ services:
     image: bitcoin/bitcoin:latest
     pull_policy: always
     restart: unless-stopped
-    stop_grace_period: 30s
+    stop_grace_period: 120s
     security_opt:
       - no-new-privileges:true
     cap_drop:
@@ -25,7 +25,7 @@ services:
       - bitcoind-data:/home/bitcoin/.bitcoin
     command:
       - -server=1
-      - -printtoconsole=0
+      - -printtoconsole=1
       - -debug=0
       - -nodebuglogfile
       - -dbcache=${BITCOIN_DBCACHE:-512}
@@ -44,7 +44,7 @@ services:
       interval: 15s
       timeout: 5s
       retries: 10
-      start_period: 30s
+      start_period: 60s
     networks:
       - default
 
