@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-11-23
+
 ### Added
 - Added `prometheus.io/scrape`, `prometheus.io/port`, and `prometheus.io/path=/metrics` labels plus configurable `PROMETHEUS_NETWORK_ALIAS` (`hashsolo-metrics` on `dokploy-network`) to `hashsolo` in `docker-compose.yml` for plug-and-play Prometheus scraping.
 - Exposed configurable backend & UI security ENVs in `docker-compose.yml` and `.env.example` (`ALLOW_PUBLIC_METRICS=false`, `METRICS_BEARER_TOKEN`, `STRATUM_MAX_CONNECTIONS_PER_IP=100`, `STRATUM_MAX_INVALID_MESSAGES=20`, `API_RATE_LIMIT_MAX=120`, `API_RATE_LIMIT_WINDOW_MS=60000`).
