@@ -36,6 +36,7 @@ services:
       - -nodebuglogfile
       - -dbcache=${BITCOIN_DBCACHE:-512}
       - -maxconnections=${BITCOIN_MAXCONNECTIONS:-40}
+      - -listenonion=0
       - -rpcuser=${BITCOIN_RPC_USER:-hashsolo}
       - -rpcpassword=${BITCOIN_RPC_PASSWORD:-changeme}
       - -rpcallowip=10.0.0.0/8
