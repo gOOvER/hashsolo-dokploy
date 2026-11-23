@@ -15,7 +15,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Enabled `bitcoind` console logging (`-printtoconsole=1` with `json-file` log rotation), increased `stop_grace_period` to `120s` (prevents `SIGKILL` during `dbcache` flush and slow block verification on restart), and raised `bitcoind` healthcheck `start_period` to `60s`.
 
 ### Security
-- Sandboxed `bitcoind` (`no-new-privileges:true`, `cap_drop: [ALL]`), `hashsolo` (`security_opt: [no-new-privileges:true]`, `cap_drop: [ALL]`, `read_only: true`, `tmpfs: [/tmp]`), and `hashsolo-ui` (`security_opt: [no-new-privileges:true]`, `cap_drop: [ALL]`, `cap_add: [NET_BIND_SERVICE]`) in `docker-compose.yml`.
+- Sandboxed `bitcoind` (`no-new-privileges:true`, `cap_drop: [ALL]` with `cap_add: [CHOWN, FOWNER, DAC_OVERRIDE, SETUID, SETGID]` for `/entrypoint.sh` `gosu`/`chmod` setup), `hashsolo` (`security_opt: [no-new-privileges:true]`, `cap_drop: [ALL]`, `read_only: true`, `tmpfs: [/tmp]`), and `hashsolo-ui` (`security_opt: [no-new-privileges:true]`, `cap_drop: [ALL]`, `cap_add: [NET_BIND_SERVICE]`) in `docker-compose.yml`.
 - Disabled public `/api/metrics` access through `hashsolo-ui` by default (`ALLOW_PUBLIC_METRICS=false`) while keeping internal Prometheus scraping via `hashsolo-metrics:3334/metrics` active.
 
 ## [1.2.0] - 2026-11-21
